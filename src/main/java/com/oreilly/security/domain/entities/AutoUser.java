@@ -1,6 +1,7 @@
 package com.oreilly.security.domain.entities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,10 +14,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name="AUTO_USER")
-public class AutoUser {
+public class AutoUser implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -36,6 +40,9 @@ public class AutoUser {
 
 	@Column(name="EMAIL")
 	private String email;
+
+	@Column(name="ROLE")
+	private String role;
 
 	@JsonIgnore
 	@OneToMany(mappedBy="user", cascade=CascadeType.PERSIST)
@@ -61,8 +68,33 @@ public class AutoUser {
 		return username;
 	}
 
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return AuthorityUtils.createAuthorityList(role);
 	}
 
 	public String getPassword() {
@@ -89,4 +121,11 @@ public class AutoUser {
 		this.appointments = appointments;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }
