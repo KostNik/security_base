@@ -42,6 +42,10 @@
 				<label for="model">Password</label>
 				<input type="password" name="custom_password" class="form-control" />
 			</div>
+			<div class="form-group">
+				<label for="model">Automobile make</label>
+				<input name="make" class="form-control" />
+			</div>
 			<sec:csrfInput/>
 
 			<c:if test="${param.logout != null }">
